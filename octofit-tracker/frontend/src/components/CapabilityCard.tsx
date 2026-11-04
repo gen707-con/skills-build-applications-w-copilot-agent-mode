@@ -1,24 +1,23 @@
 import { useEffect, useState } from 'react';
-import { getJson } from '../api/client.js';
 
 type Item = Record<string, unknown>;
 type Props = {
   title: string;
   description: string;
-  endpoint: string;
+  loadData: () => Promise<Record<string, unknown>>;
   responseKey: string;
   emptyMessage: string;
   renderItem: (item: Item) => string;
 };
 type ViewState = { status: 'loading' } | { status: 'error' } | { status: 'success'; items: Item[] };
 
-export function CapabilityCard({ title, description, endpoint, responseKey, emptyMessage, renderItem }: Props) {
+export function CapabilityCard({ title, description, loadData, responseKey, emptyMessage, renderItem }: Props) {
   const [view, setView] = useState<ViewState>({ status: 'loading' });
 
   useEffect(() => {
     let active = true;
     setView({ status: 'loading' });
-    getJson<Record<string, unknown>>(endpoint)
+    loadData()
       .then((response) => {
         const value = response[responseKey];
         const items = Array.isArray(value)
@@ -31,7 +30,7 @@ export function CapabilityCard({ title, description, endpoint, responseKey, empt
       });
 
     return () => { active = false; };
-  }, [endpoint, responseKey]);
+  }, [loadData, responseKey]);
 
   return (
     <section className="card h-100">
