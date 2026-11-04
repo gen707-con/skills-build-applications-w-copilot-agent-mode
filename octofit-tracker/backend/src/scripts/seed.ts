@@ -39,7 +39,7 @@ export async function seed() {
     const octocats = await upsertDemoTeam('Octocats', 'Mona');
     const robocats = await upsertDemoTeam('Robocats', 'Hubot');
     const speedsters = await upsertDemoTeam('Speedsters', 'Bolt');
-    const dragons = await upsertDemoTeam('Dragons', 'Blaze');
+    await upsertDemoTeam('Dragons', 'Blaze');
 
     const mona = await upsertDemoUser('Mona', 'mona@example.com', octocats._id, 'endurance');
     const hubot = await upsertDemoUser('Hubot', 'hubot@example.com', robocats._id, 'strength');
@@ -68,8 +68,6 @@ export async function seed() {
     await upsertDemoWorkout('Intervals', 'endurance', 30, 'moderate');
     await upsertDemoWorkout('Strength Circuit', 'strength', 30, 'moderate');
     await upsertDemoWorkout('Mobility Flow', 'mobility', 20, 'easy');
-
-    await Team.updateOne({ _id: dragons._id }, { $set: { members: [] } });
   } finally {
     await disconnectDatabase();
   }
